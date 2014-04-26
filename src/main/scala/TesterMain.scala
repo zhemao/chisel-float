@@ -10,10 +10,10 @@ object TesterMain {
                 chiselMainTest(testArgs, () => Module(new FPMult(32))) {
                     c => new FPMult32Test(c)
                 }
-            /*case "FPMult64" =>
-                chiselMainTest(testArgs, () => Module(new FPMult(64)) {
+            case "FPMult64" =>
+                chiselMainTest(testArgs, () => Module(new FPMult(64))) {
                     c => new FPMult64Test(c)
-                }*/
+                }
         }
     }
 }
