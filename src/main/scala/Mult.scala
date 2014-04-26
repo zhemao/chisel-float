@@ -5,6 +5,19 @@ import java.lang.Float.floatToRawIntBits
 import java.lang.Double.doubleToRawLongBits
 import java.math.BigInteger
 
+class MantissaRounder(val n: Int) extends Module {
+    val io = new Bundle {
+        val in = UInt(INPUT, n)
+        val out = UInt(OUTPUT, n - 1)
+    }
+
+    when (io.in(0) === UInt(1)) {
+        io.out := io.in(n - 1, 1) + UInt(1)
+    } .otherwise {
+        io.out := io.in(n - 1, 1)
+    }
+}
+
 class FPMult(val n: Int) extends Module {
     val io = new Bundle {
         val a = Bits(INPUT, n)
@@ -34,18 +47,22 @@ class FPMult(val n: Int) extends Module {
         case 64 => (105, 52, 11, 1023)
     }
 
+    val rounder = Module(new MantissaRounder(mantissaSize + 1))
+
     when (zero_reg) {
         stage2_exponent := UInt(0, exponentSize)
-        stage2_mantissa := UInt(0, mantissaSize)
+        rounder.io.in := UInt(0, mantissaSize + 1)
     } .elsewhen (mantissa_reg(mantissaLead) === Bits(1)) {
         stage2_exponent := exponent_reg - UInt(exponentSub - 1)
-        stage2_mantissa := mantissa_reg(mantissaLead - 1,
-                                        mantissaLead - mantissaSize)
+        rounder.io.in := mantissa_reg(mantissaLead - 1,
+                                      mantissaLead - mantissaSize - 1)
     } .otherwise {
         stage2_exponent := exponent_reg - UInt(exponentSub)
-        stage2_mantissa := mantissa_reg(mantissaLead - 2,
-                                        mantissaLead - mantissaSize - 1)
+        rounder.io.in := mantissa_reg(mantissaLead - 2,
+                                      mantissaLead - mantissaSize - 2)
     }
+
+    stage2_mantissa := rounder.io.out
 
     io.res := Cat(stage2_sign.toBits(),
                   stage2_exponent.toBits(),
