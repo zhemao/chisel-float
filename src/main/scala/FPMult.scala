@@ -69,7 +69,10 @@ class FPMult(val n: Int) extends Module {
                   stage2_mantissa.toBits())
 }
 
-class FPMult32Test(c: FPMult) extends Tester(c) {
+class FPMult32 extends FPMult(32) {}
+class FPMult64 extends FPMult(64) {}
+
+class FPMult32Test(c: FPMult32) extends Tester(c) {
     def floatToBigInt(x: Float): BigInt = {
         val integer = floatToRawIntBits(x)
         var byte_array = new Array[Byte](5)
@@ -109,7 +112,7 @@ class FPMult32Test(c: FPMult) extends Tester(c) {
     expect(c.io.res, floatToBigInt(lastExpected))
 }
 
-class FPMult64Test(c: FPMult) extends Tester(c) {
+class FPMult64Test(c: FPMult64) extends Tester(c) {
     def doubleToBigInt(x: Double): BigInt = {
         val integer = doubleToRawLongBits(x)
         var byte_array = new Array[Byte](9)
