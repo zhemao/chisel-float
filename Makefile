@@ -12,4 +12,4 @@ FPMult64.v: src/main/scala/FPMult.scala
 
 
 clean:
-	rm -f *.o *.cpp *.h FPMult *.v
+	rm -f *.o *.cpp *.h FPMult32 FPMult64 *.v
