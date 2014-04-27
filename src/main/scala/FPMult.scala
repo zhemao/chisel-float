@@ -1,9 +1,7 @@
 package ChiselFloat
 
 import Chisel._
-import java.lang.Float.floatToRawIntBits
-import java.lang.Double.doubleToRawLongBits
-import java.math.BigInteger
+import FloatUtils.{floatToBigInt, doubleToBigInt}
 
 class MantissaRounder(val n: Int) extends Module {
     val io = new Bundle {
@@ -73,23 +71,10 @@ class FPMult32 extends FPMult(32) {}
 class FPMult64 extends FPMult(64) {}
 
 class FPMult32Test(c: FPMult32) extends Tester(c) {
-    def floatToBigInt(x: Float): BigInt = {
-        val integer = floatToRawIntBits(x)
-        var byte_array = new Array[Byte](5)
-
-        byte_array(0) = 0
-
-        for (i <- 1 to 4) {
-            byte_array(i) = ((integer >> ((4 - i) * 8)) & 0xff).toByte
-        }
-
-        BigInt(new BigInteger(byte_array))
-    }
-
     var lastExpected = 0.0f
 
-    poke(c.io.a, floatToRawIntBits(0.0f))
-    poke(c.io.b, floatToRawIntBits(3.0f))
+    poke(c.io.a, floatToBigInt(0.0f))
+    poke(c.io.b, floatToBigInt(3.0f))
     step(1)
 
     for (i <- 0 until 8) {
@@ -113,19 +98,6 @@ class FPMult32Test(c: FPMult32) extends Tester(c) {
 }
 
 class FPMult64Test(c: FPMult64) extends Tester(c) {
-    def doubleToBigInt(x: Double): BigInt = {
-        val integer = doubleToRawLongBits(x)
-        var byte_array = new Array[Byte](9)
-
-        byte_array(0) = 0
-
-        for (i <- 1 to 8) {
-            byte_array(i) = ((integer >> ((8 - i) * 8)) & 0xff).toByte
-        }
-
-        BigInt(new BigInteger(byte_array))
-    }
-
     var lastExpected = 0.0
 
     for (i <- 0 until 8) {
