@@ -2,6 +2,9 @@
 *.h
 *.o
 *.v
+*.vcd
 /FPMult32
 /FPMult64
+/FPAdd32
+/FPAdd64
 target/
