@@ -2,7 +2,7 @@ organization := "edu.berkeley.cs"
 
 version := "2.3-SNAPSHOT"
 
-name := "chisel-tutorial"
+name := "chisel_float"
 
 scalaVersion := "2.10.2"
 
