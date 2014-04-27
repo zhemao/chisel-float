@@ -1,5 +1,7 @@
 *.cpp
 *.h
 *.o
-/FPMult
+*.v
+/FPMult32
+/FPMult64
 target/
