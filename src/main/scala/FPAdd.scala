@@ -178,17 +178,6 @@ class FPAddStage3(val n: Int) extends Module {
 class FPAddStage4(val n: Int) extends Module {
     val (expWidth, mantWidth) = getExpMantWidths(n)
 
-    def reversePriorityEncode(bits: Bits): UInt = {
-        val lastIndex = bits.getWidth - 1
-        val resultSize = log2Up(lastIndex)
-        val boolNumIter = (0 to lastIndex).map {
-            i => (bits(lastIndex - i).toBool(), i)
-        }
-        boolNumIter.foldRight(UInt(lastIndex, resultSize)) {
-            (tup, lastNode) => Mux(tup._1, UInt(tup._2, resultSize), lastNode)
-        }
-    }
-
     val io = new Bundle {
         val exp_in = UInt(INPUT, expWidth)
         val mant_in = UInt(INPUT, mantWidth + 1)
@@ -200,8 +189,7 @@ class FPAddStage4(val n: Int) extends Module {
     // finally in stage 4 we normalize mantissa and exponent
     // we need to reverse the sum, since we want the find the most
     // significant 1 instead of the least significant 1
-    val norm_shift = reversePriorityEncode(io.mant_in)
-    //val norm_shift = PriorityEncoder(Reverse(io.mant_in))
+    val norm_shift = PriorityEncoder(Reverse(io.mant_in))
 
     // if the mantissa sum is zero, result mantissa and exponent should be zero
     when (io.mant_in === UInt(0)) {
