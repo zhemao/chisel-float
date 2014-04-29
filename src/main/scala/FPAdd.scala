@@ -83,9 +83,9 @@ class FPAddStage2(val n: Int) extends Module {
         val mantb_in = UInt(INPUT, mantWidth + 1)
         val exp_in = UInt(INPUT, expWidth)
         val mant_shift = UInt(INPUT, expWidth)
-        val b_larger = Bool()
-        val sign_in = Bool()
-        val sub_in = Bool()
+        val b_larger = Bool(INPUT)
+        val sign_in = Bool(INPUT)
+        val sub_in = Bool(INPUT)
 
         val manta_out = UInt(OUTPUT, mantWidth + 1)
         val mantb_out = UInt(OUTPUT, mantWidth + 1)
