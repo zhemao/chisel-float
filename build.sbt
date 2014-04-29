@@ -1,11 +1,11 @@
-organization := "edu.berkeley.cs"
+organization := "com.mao.howard"
 
-version := "2.3-SNAPSHOT"
+version := "0.1-SNAPSHOT"
 
 name := "chisel_float"
 
-scalaVersion := "2.10.2"
+scalaVersion := "2.10.3"
 
 addSbtPlugin("com.github.scct" % "sbt-scct" % "0.2")
 
-libraryDependencies += "edu.berkeley.cs" %% "chisel" % "latest.release"
+libraryDependencies += "edu.berkeley.cs" %% "chisel" % "2.3-SNAPSHOT"
