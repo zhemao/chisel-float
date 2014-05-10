@@ -2,7 +2,7 @@ organization := "com.mao.howard"
 
 version := "0.1-SNAPSHOT"
 
-name := "chisel_float"
+name := "chisel-float"
 
 scalaVersion := "2.10.3"
 
