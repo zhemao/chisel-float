@@ -8,7 +8,7 @@ descriptions.
 There are modules for floating point addition and multiplication.
 Both single-precision and double-precision numbers are supported.
 
-Classes
+## Classes
 
  * FPMult32, FPMult64 - Single-precision and double-precision multipliers with
    single-cycle pipeline latency
@@ -20,6 +20,15 @@ functionality is known to work, there may be corner cases which are not
 handled properly. In particular, there is no support for NaN, infinity, or
 denormalized numbers other than zero. There is also no exponent overflow or
 underflow detection. If you care about these things, do not use these modules.
+
+## Example Usage
+
+    val adder = Module(new FPAdd32())
+    adder.io.a := FIRST_INPUT
+    adder.io.b := SECOND_INPUT
+    OUTPUT := adder.io.res
+
+The other modules have the same interface.
 
 ## License
 
