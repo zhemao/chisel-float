@@ -78,8 +78,8 @@ class FPMult32Test(c: FPMult32) extends Tester(c) {
     step(1)
 
     for (i <- 0 until 8) {
-        val a = rnd.nextFloat() * 10000000.0f - 5000000.0f
-        val b = rnd.nextFloat() * 10000000.0f - 5000000.0f
+        val a = rnd.nextFloat() * 10000.0f - 5000.0f
+        val b = rnd.nextFloat() * 10000.0f - 5000.0f
         val expected = a * b
 
         poke(c.io.a, floatToBigInt(a))
@@ -101,8 +101,8 @@ class FPMult64Test(c: FPMult64) extends Tester(c) {
     var lastExpected = 0.0
 
     for (i <- 0 until 8) {
-        val a = rnd.nextDouble() * 10000000.0 - 5000000.0
-        val b = rnd.nextDouble() * 10000000.0 - 5000000.0
+        val a = rnd.nextDouble() * 10000.0 - 5000.0
+        val b = rnd.nextDouble() * 10000.0 - 5000.0
         val expected = a * b
 
         poke(c.io.a, doubleToBigInt(a))

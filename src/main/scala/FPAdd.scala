@@ -253,8 +253,8 @@ class FPAdd32Test(c: FPAdd32) extends Tester(c) {
     step(1)
 
     for (i <- 0 until 8) {
-        val a = rnd.nextFloat() * 10000000.0f - 5000000.0f
-        val b = rnd.nextFloat() * 10000000.0f - 5000000.0f
+        val a = rnd.nextFloat() * 10000.0f - 5000.0f
+        val b = rnd.nextFloat() * 10000.0f - 5000.0f
         inputsQueue.enqueue((a, b))
         expectedQueue.enqueue(Some(a + b))
 
@@ -299,8 +299,8 @@ class FPAdd64Test(c: FPAdd64) extends Tester(c) {
     step(1)
 
     for (i <- 0 until 8) {
-        val a = rnd.nextDouble() * 10000000.0 - 5000000.0
-        val b = rnd.nextDouble() * 10000000.0 - 5000000.0
+        val a = rnd.nextDouble() * 10000.0 - 5000.0
+        val b = rnd.nextDouble() * 10000.0 - 5000.0
         inputsQueue.enqueue((a, b))
         expectedQueue.enqueue(Some(a + b))
 
