@@ -252,9 +252,13 @@ class FPAdd32Test(c: FPAdd32) extends Tester(c) {
     poke(c.io.b, floatToBigInt(0.0f))
     step(1)
 
+    def randFloat(): Float = {
+        rnd.nextFloat() * 1000000.0f - 500000.0f
+    }
+
     for (i <- 0 until 8) {
-        val a = rnd.nextFloat() * 10000.0f - 5000.0f
-        val b = rnd.nextFloat() * 10000.0f - 5000.0f
+        val a = randFloat()
+        val b = randFloat()
         inputsQueue.enqueue((a, b))
         expectedQueue.enqueue(Some(a + b))
 
@@ -294,13 +298,17 @@ class FPAdd64Test(c: FPAdd64) extends Tester(c) {
     val inputsQueue = Queue((0.0, 0.0))
     val expectedQueue = Queue(None, None, Some(0.0))
 
+    def randDouble(): Double = {
+        rnd.nextDouble() * 1000000.0 - 500000.0
+    }
+
     poke(c.io.a, doubleToBigInt(0.0))
     poke(c.io.b, doubleToBigInt(0.0))
     step(1)
 
     for (i <- 0 until 8) {
-        val a = rnd.nextDouble() * 10000.0 - 5000.0
-        val b = rnd.nextDouble() * 10000.0 - 5000.0
+        val a = randDouble()
+        val b = randDouble()
         inputsQueue.enqueue((a, b))
         expectedQueue.enqueue(Some(a + b))
 
