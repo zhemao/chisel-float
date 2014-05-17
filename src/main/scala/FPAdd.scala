@@ -1,7 +1,8 @@
 package ChiselFloat
 
 import Chisel._
-import FloatUtils.{floatToBigInt, doubleToBigInt, getExpMantWidths}
+import FloatUtils.{floatToBigInt, doubleToBigInt, getExpMantWidths,
+                   floatAdd, doubleAdd}
 import scala.collection.mutable.Queue
 
 class SatLeftShift(val m: Int, val n: Int) extends Module {
@@ -260,7 +261,7 @@ class FPAdd32Test(c: FPAdd32) extends Tester(c) {
         val a = randFloat()
         val b = randFloat()
         inputsQueue.enqueue((a, b))
-        expectedQueue.enqueue(Some(a + b))
+        expectedQueue.enqueue(Some(floatAdd(a, b)))
 
         poke(c.io.a, floatToBigInt(a))
         poke(c.io.b, floatToBigInt(b))
@@ -310,7 +311,7 @@ class FPAdd64Test(c: FPAdd64) extends Tester(c) {
         val a = randDouble()
         val b = randDouble()
         inputsQueue.enqueue((a, b))
-        expectedQueue.enqueue(Some(a + b))
+        expectedQueue.enqueue(Some(doubleAdd(a, b)))
 
         poke(c.io.a, doubleToBigInt(a))
         poke(c.io.b, doubleToBigInt(b))
