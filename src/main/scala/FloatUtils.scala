@@ -5,6 +5,45 @@ import java.lang.Double.{doubleToRawLongBits, longBitsToDouble}
 import java.math.BigInteger
 
 object FloatUtils {
+    def floatsToBigInt(floats: Seq[Float]): BigInt = {
+        // extra '0' byte in front
+        val float_array = floats.toArray
+        var byte_array = new Array[Byte](1 + float_array.length * 4)
+
+        byte_array(0) = 0
+
+        for (i <- 0 until float_array.length) {
+            val start_index = i * 4
+            val rawint = floatToRawIntBits(float_array(i))
+
+            for (j <- 1 to 4) {
+                byte_array(start_index + j) =
+                    ((rawint >> ((4 - j) * 8)) & 0xff).toByte
+            }
+        }
+
+        BigInt(new BigInteger(byte_array))
+    }
+
+    def doublesToBigInt(doubles: Seq[Double]): BigInt = {
+        val double_array = doubles.toArray
+        val byte_array = new Array[Byte](1 + double_array.length * 8)
+
+        byte_array(0) = 0
+
+        for (i <- 0 until double_array.length) {
+            val start_index = i * 8
+            val rawlong = doubleToRawLongBits(double_array(i))
+
+            for (j <- 1 to 8) {
+                byte_array(start_index + j) =
+                    ((rawlong >> ((8 - j) * 8)) & 0xff).toByte
+            }
+        }
+
+        BigInt(new BigInteger(byte_array))
+    }
+
     def floatToBigInt(x: Float): BigInt = {
         val integer = floatToRawIntBits(x)
         var byte_array = new Array[Byte](5)
