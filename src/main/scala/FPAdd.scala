@@ -247,35 +247,38 @@ class FPAdd64 extends FPAdd(64) {}
 
 class FPAdd32Test(c: FPAdd32) extends Tester(c) {
     val inputsQueue = Queue((0.0f, 0.0f))
-    val expectedQueue = Queue(None, None, Some(0.0f))
-
-    poke(c.io.a, floatToBigInt(0.0f))
-    poke(c.io.b, floatToBigInt(0.0f))
-    step(1)
+    val usedInputsQueue = Queue[(Float, Float)]()
+    val expectedQueue = Queue(None, None, None, Some(0.0f))
 
     def randFloat(): Float = {
-        rnd.nextFloat() * 1000000.0f - 500000.0f
+        rnd.nextFloat() * 10000.0f - 5000.0f
     }
 
-    for (i <- 0 until 8) {
+    for (i <- 0 until 20) {
         val a = randFloat()
         val b = randFloat()
         inputsQueue.enqueue((a, b))
-        expectedQueue.enqueue(Some(floatAdd(a, b)))
+        expectedQueue.enqueue(Some(a + b))
+    }
 
+    while (!inputsQueue.isEmpty) {
+        val (a, b) = inputsQueue.dequeue()
         poke(c.io.a, floatToBigInt(a))
         poke(c.io.b, floatToBigInt(b))
         step(1)
 
+        usedInputsQueue.enqueue((a, b))
         val expectedOption = expectedQueue.dequeue()
 
         if (!expectedOption.isEmpty) {
             val expected = expectedOption.get
-            val (inputa, inputb) = inputsQueue.dequeue()
-            println(s"Expecting $inputa + $inputb = $expected")
-            println("AKA %x + %x = %x".format(floatToBigInt(inputa),
-                                              floatToBigInt(inputb),
-                                              floatToBigInt(expected)))
+            val (inputa, inputb) = usedInputsQueue.dequeue()
+            printf("%f + %f = %f\n", inputa, inputb, expected)
+            printf("A: %x, B:%x, HW: %x, EMU: %x\n",
+                    floatToBigInt(inputa),
+                    floatToBigInt(inputb),
+                    floatToBigInt(inputa + inputb),
+                    floatToBigInt(floatAdd(inputa, inputb)))
             expect(c.io.res, floatToBigInt(expected))
         }
     }
@@ -283,13 +286,14 @@ class FPAdd32Test(c: FPAdd32) extends Tester(c) {
     while (!expectedQueue.isEmpty) {
         val expectedOption = expectedQueue.dequeue()
         val expected = expectedOption.get
-        val (inputa, inputb) = inputsQueue.dequeue()
+        val (inputa, inputb) = usedInputsQueue.dequeue()
 
-        println(s"Expecting $expected or ${floatToBigInt(expected)}")
-        println(s"Expecting $inputa + $inputb = $expected")
-        println("AKA %x + %x = %x".format(floatToBigInt(inputa),
-                                          floatToBigInt(inputb),
-                                          floatToBigInt(expected)))
+        printf("%f + %f = %f\n", inputa, inputb, expected)
+        printf("A: %x, B:%x, HW: %x, EMU: %x\n",
+                floatToBigInt(inputa),
+                floatToBigInt(inputb),
+                floatToBigInt(inputa + inputb),
+                floatToBigInt(floatAdd(inputa, inputb)))
         step(1)
         expect(c.io.res, floatToBigInt(expected))
     }
