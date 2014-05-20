@@ -258,7 +258,7 @@ class FPAdd32Test(c: FPAdd32) extends Tester(c) {
         val a = randFloat()
         val b = randFloat()
         inputsQueue.enqueue((a, b))
-        expectedQueue.enqueue(Some(a + b))
+        expectedQueue.enqueue(Some(floatAdd(a, b)))
     }
 
     while (!inputsQueue.isEmpty) {
