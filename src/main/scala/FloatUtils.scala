@@ -99,22 +99,26 @@ object FloatUtils {
         val bexp  = (bbits >> 52) & 0x7ffL
         val bmant = (bbits & ((1L << 52) - 1L)) | (if (bexp == 0) 0 else 1L << 52)
 
-        val a_signed_mant = if (asign == 1) -amant else amant
-        val b_signed_mant = if (bsign == 1) -bmant else bmant
-
-        val (sum, exp) = if (aexp > bexp) {
+        val (bigger_mant, smaller_mant, exp, sign) = if (aexp > bexp) {
             val shiftby = (aexp - bexp)
-            val bigger_mant = a_signed_mant
-            val smaller_mant = b_signed_mant >> shiftby
-            (bigger_mant + smaller_mant, aexp)
+            (amant, bmant >> shiftby, aexp, asign)
         } else {
             val shiftby = (bexp - aexp)
-            val bigger_mant = b_signed_mant
-            val smaller_mant = a_signed_mant >> shiftby
-            (bigger_mant + smaller_mant, bexp)
+            (bmant, amant >> shiftby, bexp, bsign)
         }
 
-        val (sign, abssum) = if (sum < 0) (1L, -sum) else (0L, sum)
+        val sub = (asign ^ bsign) == 1
+        val sum = if (sub) {
+            bigger_mant - smaller_mant
+        } else {
+            bigger_mant + smaller_mant
+        }
+
+        val (actualsign, abssum) = if (sum < 0) {
+            (~sign & 1, -sum)
+        } else {
+            (sign, sum)
+        }
 
         val (actualexp, actualsum) = if (abssum == 0) {
             (0L, 0L)
@@ -143,22 +147,26 @@ object FloatUtils {
         val bexp  = (bbits >> 23) & 0xff
         val bmant = (bbits & 0x7fffff) | (if (bexp == 0) 0 else 1 << 23)
 
-        val a_signed_mant = if (asign == 1) -amant else amant
-        val b_signed_mant = if (bsign == 1) -bmant else bmant
-
-        val (sum, exp) = if (aexp > bexp) {
+        val (bigger_mant, smaller_mant, exp, sign) = if (aexp > bexp) {
             val shiftby = (aexp - bexp)
-            val bigger_mant = a_signed_mant
-            val smaller_mant = b_signed_mant >> shiftby
-            (bigger_mant + smaller_mant, aexp)
+            (amant, bmant >> shiftby, aexp, asign)
         } else {
             val shiftby = (bexp - aexp)
-            val bigger_mant = b_signed_mant
-            val smaller_mant = a_signed_mant >> shiftby
-            (bigger_mant + smaller_mant, bexp)
+            (bmant, amant >> shiftby, bexp, bsign)
         }
 
-        val (sign, abssum) = if (sum < 0) (1, -sum) else (0, sum)
+        val sub = (asign ^ bsign) == 1
+        val sum = if (sub) {
+            bigger_mant - smaller_mant
+        } else {
+            bigger_mant + smaller_mant
+        }
+
+        val (actualsign, abssum) = if (sum < 0) {
+            (~sign & 1, -sum)
+        } else {
+            (sign, sum)
+        }
 
         val (actualexp, actualsum) = if (abssum == 0) {
             (0, 0)
@@ -170,7 +178,7 @@ object FloatUtils {
             (exp - firstOne, abssum << firstOne)
         }
 
-        val rawres = (sign << 31) | ((actualexp & 0xff) << 23) |
+        val rawres = (actualsign << 31) | ((actualexp & 0xff) << 23) |
             (actualsum & 0x7fffff)
         intBitsToFloat(rawres)
     }
