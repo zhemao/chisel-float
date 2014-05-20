@@ -9,11 +9,7 @@ class MantissaRounder(val n: Int) extends Module {
         val out = UInt(OUTPUT, n - 1)
     }
 
-    when (io.in(0) === UInt(1)) {
-        io.out := io.in(n - 1, 1) + UInt(1)
-    } .otherwise {
-        io.out := io.in(n - 1, 1)
-    }
+    io.out := io.in(n - 1, 1) + io.in(0)
 }
 
 class FPMult(val n: Int) extends Module {
