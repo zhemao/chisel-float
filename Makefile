@@ -26,5 +26,5 @@ FPAdd64.v: src/main/scala/FPAdd.scala
 	sbt "run FPAdd64 $(COMPILE_OPTIONS)"
 
 clean:
-	rm -f *.o *.cpp *.h FPMult32 FPMult64 FPAdd32 FPAdd64 *.v
+	rm -f *.o *.cpp *.h FPMult32 FPMult64 FPAdd32 FPAdd64 *.v *.vcd
 	sbt clean
