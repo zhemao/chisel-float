@@ -6,7 +6,7 @@ import Chisel._
 // extraction of the different parts (sign, exponent, mantissa)
 
 class FloatWrapper(val num: Bits) {
-    val (sign, exponent, mantissa, zero) = num.width match {
+    val (sign, exponent, mantissa, zero) = num.getWidth match {
         case 32 => (num(31).toBool(),
                     num(30, 23).toUInt(),
                     // if the exponent is 0

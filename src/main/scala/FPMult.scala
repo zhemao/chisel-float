@@ -33,8 +33,8 @@ class FPMult(val n: Int) extends Module {
     val zero_reg = Reg(next = stage1_zero)
 
     val stage2_sign = sign_reg
-    val stage2_exponent = UInt(width = a_wrap.exponent.width)
-    val stage2_mantissa = UInt(width = a_wrap.mantissa.width - 1)
+    val stage2_exponent = UInt(width = a_wrap.exponent.getWidth)
+    val stage2_mantissa = UInt(width = a_wrap.mantissa.getWidth - 1)
 
     val (mantissaLead, mantissaSize, exponentSize, exponentSub) = n match {
         case 32 => (47, 23, 8, 127)
